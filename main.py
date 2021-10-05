@@ -387,6 +387,8 @@ def initGame():
         coordY = Tray.getY(currentTray)
         dashboard(currentTray, player, fighter, coordX, coordY)
 
+    elif alreadyLogged == "reset":
+        deleteData()
 
     elif alreadyLogged == "oui":
         username = input("Quel étais votre username : ")
@@ -547,5 +549,18 @@ def showMenu(mode):
 
     print("Commencer le jeu, tapez 'start'")
     print("\n≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
+
+def deleteData():
+
+    sure = input("Êtes vous sûr de cette manoeuvre : ")
+
+    if sure == "oui":
+        
+        with open('storage/players.txt', "w") as players:
+            players.write("")
+
+        with open('storage/bestScores.txt', "w") as scores:
+            scores.write("")
+
 
 initGame()
