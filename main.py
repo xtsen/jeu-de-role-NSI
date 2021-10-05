@@ -136,7 +136,8 @@ def fight(player, fighter):
         print("Aucun combat n'aura lieu")
     else:
         # ajout d'un nombre de chance
-        chanceToWin = randint(1, 20)
+        chanceToWin = randint(10, 20)
+        currentLevel =  P.Player.getLevel(player)
 
         LP_Player = P.Player.getLP(player)
         strength_Player = P.Player.getStrength(player) + chanceToWin
@@ -149,7 +150,14 @@ def fight(player, fighter):
             LP_Fighter -= strength_Player
 
         # Update de l'objet player
+        newLevels = chanceToWin*10
         PUT_Player(player, LP_Player, P.Player.getStrength(player), P.Player.getMoney(player) + 100)
+        P.Player.upgrade(player, newLevels)
+        if currentLevel != P.Player.getLevel(player):
+
+            print(f"Le combat vous a fait gagné {newLevels // 100} niveaux, vous êtes maintenant niveau {P.Player.getLevel(player)}")
+            print("—————————————————————————————————————————————————\n")
+
         if LP_Player <= 0:
             print("Vous avez perdu le combat.")
             print(f"Vous êtes mort.")
@@ -159,6 +167,8 @@ def fight(player, fighter):
             print("Vous avez gagné le combat.")
             print(f"Vous avez maintenant {P.Player.getLP(player)} points de vie")
             print("—————————————————————————————————————————————————\n")
+
+        
 
 def trading(player):
     print(f"Vous avez actuellement {P.Player.getMoney(player)}€\n")
@@ -314,7 +324,7 @@ def newGame(currentTray, player, coordX, coordY):
             player, coordX, coordY = round(currentTray, player, tray, coordX, coordY)
 
     if reason == "reachEnd":
-        score = (P.Player.getLP(player)*5 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)
+        score = (P.Player.getLP(player)*5 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)
         writeScore(score)
         writeUsername(P.Player.getName(player))
         print("≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
@@ -555,12 +565,11 @@ def deleteData():
     sure = input("Êtes vous sûr de cette manoeuvre : ")
 
     if sure == "oui":
-        
+
         with open('storage/players.txt', "w") as players:
             players.write("")
 
         with open('storage/bestScores.txt', "w") as scores:
             scores.write("")
-
 
 initGame()
