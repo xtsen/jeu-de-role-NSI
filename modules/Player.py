@@ -13,6 +13,7 @@ class Player:
         self.__Money = Money
         self.__Difficulty = 1
         self.__Saved = False
+        self.__Level = 100
 
     #=============================
     # Les getters
@@ -34,6 +35,9 @@ class Player:
 
     def getSaves(self):
         return self.__Saved
+
+    def getLevel(self):
+        return self.__Level // 100
 
     #=============================
     # Les setters
@@ -66,6 +70,9 @@ class Player:
 
     def saved(self):
         self.__Saved = True
+
+    def upgrade(self, LevelPoints):
+        self.__Level += LevelPoints
 
     #=============================
     # Les events
