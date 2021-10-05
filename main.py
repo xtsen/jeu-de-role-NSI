@@ -378,6 +378,11 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
         P.Player.setDifficulty(player, difficultyLevel)
         dashboard(currentTray, player, fighter, coordX, coordY)
 
+    elif choice == "info":
+
+        print("————————————————————————————————————————————————")
+        print(f"Pour ce jeu, {nbLines()} lignes de code on été nécessaire.")
+
     elif choice == "start":
         newGame(currentTray, player, coordX, coordY)  
 
@@ -415,7 +420,7 @@ def initGame():
         player = P.Player(100, 25, 100, username)
         
         print("————————————————————————————————————————————————")
-        print(f"Bienvenue dans le monde meconnu et magique de Vendée le meilleur score est {highestScore()}.\n")
+        print(f"Bienvenue dans le monde meconnu et magique de Vendée, le meilleur score est {highestScore()}.\n")
         print("Malheureusement vous avez été téléporté ici par erreur par un magicien qui convoite votre fortune.\n")
         print("Le sorcier vous a laissé comme seule chance de vous en sortir une carte avec la sortie du royaume.")
         print("————————————————————————————————————————————————")
@@ -556,6 +561,8 @@ def showMenu(mode):
         print("————————————————————————————————————————————————")
         print("Définir le niveau de diffuculté, tapez 'difficulté'")
         print("————————————————————————————————————————————————")
+        print("Avoir plus d'info, tapez 'info'")
+        print("————————————————————————————————————————————————")
 
     print("Commencer le jeu, tapez 'start'")
     print("\n≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
@@ -571,5 +578,33 @@ def deleteData():
 
         with open('storage/bestScores.txt', "w") as scores:
             scores.write("")
+
+def nbLines():
+    nbLines = 0
+    with open('main.py') as main:
+        lines = main.readlines()
+        
+        for line in lines:
+            nbLines += 1
+
+    with open('modules/Fighter.py') as fighter:
+        lines = fighter.readlines()
+        
+        for line in lines:
+            nbLines += 1
+
+    with open('modules/Player.py') as player:
+        lines = player.readlines()
+        
+        for line in lines:
+            nbLines += 1
+
+    with open('modules/Trader.py') as trader:
+        lines = trader.readlines()
+        
+        for line in lines:
+            nbLines += 1
+
+    return nbLines
 
 initGame()
