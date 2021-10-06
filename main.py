@@ -17,19 +17,23 @@ class Tray:
         max : 1 objet par partie
         param : player, fighter
     """
-    def __init__(self, player, fighter):
-        tray = [
-            ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
-            ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
-            ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
-            ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
-            ["E1", "E2", "E3", "E4", "E5", "E6", "E7"],
-            ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
-            ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]
-        ]
+    def __init__(self, player, fighter, world):
+        self.__letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+        self.__lenX = world + 4
+        self.__lenY = world + 4
+
+        # Création du plateau
+        self.__Tray = []
+        for x in range(self.__lenX):
+            newX = []
+            for y in range(self.__lenY + 1):
+                newX.append(self.__letters[x] + str(y))
+
+            self.__Tray.append(newX)
+
+        self.__world = world
         self.__coordX = 0
         self.__coordY = 0
-        self.__Tray = tray
         self.__Room = Room(player, fighter)
 
     #=============================
@@ -47,6 +51,14 @@ class Tray:
     def getY(self):
         return self.__coordY
 
+    def getWorld(self):
+        return self.__world
+
+    def bottomBar(self):
+        for i in range(self.__lenX - 1):
+            print("—————", end='')
+        print('——————')
+
     #=============================
     # Les events
     #=============================  
@@ -54,32 +66,36 @@ class Tray:
         Room.launchEvent(self.__Room)
 
     def showTray(self, coordX, coordY):
-        tray = [
-            ["A1", "A2", "A3", "A4", "A5", "A6", "A7"],
-            ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
-            ["C1", "C2", "C3", "C4", "C5", "C6", "C7"],
-            ["D1", "D2", "D3", "D4", "D5", "D6", "D7"],
-            ["E1", "E2", "E3", "E4", "E5", "E6", "E7"],
-            ["F1", "F2", "F3", "F4", "F5", "F6", "F7"],
-            ["G1", "G2", "G3", "G4", "G5", "G6", "G7"]
-        ]
-        self.__Tray = tray
-        self.__Tray[coordX][coordY] = "-O-"
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[0][0]} | {self.__Tray[0][1]} | {self.__Tray[0][2]} | {self.__Tray[0][3]} | {self.__Tray[0][4]} | {self.__Tray[0][5]} | {self.__Tray[0][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[1][0]} | {self.__Tray[1][1]} | {self.__Tray[1][2]} | {self.__Tray[1][3]} | {self.__Tray[1][4]} | {self.__Tray[1][5]} | {self.__Tray[1][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[2][0]} | {self.__Tray[2][1]} | {self.__Tray[2][2]} | {self.__Tray[2][3]} | {self.__Tray[2][4]} | {self.__Tray[2][5]} | {self.__Tray[2][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[3][0]} | {self.__Tray[3][1]} | {self.__Tray[3][2]} | {self.__Tray[3][3]} | {self.__Tray[3][4]} | {self.__Tray[3][5]} | {self.__Tray[3][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[4][0]} | {self.__Tray[4][1]} | {self.__Tray[4][2]} | {self.__Tray[4][3]} | {self.__Tray[4][4]} | {self.__Tray[4][5]} | {self.__Tray[4][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[5][0]} | {self.__Tray[5][1]} | {self.__Tray[5][2]} | {self.__Tray[5][3]} | {self.__Tray[5][4]} | {self.__Tray[5][5]} | {self.__Tray[5][6]} |")
-        print("————————————————————————————————————")
-        print(f"| {self.__Tray[6][0]} | {self.__Tray[6][1]} | {self.__Tray[6][2]} | {self.__Tray[6][3]} | {self.__Tray[6][4]} | {self.__Tray[6][5]} | X |")
-        print("————————————————————————————————————")
+
+        self.__Tray = []
+        for x in range(self.__lenX):
+            newX = []
+            for y in range(1, self.__lenY + 1):
+                newX.append(self.__letters[x] + str(y))
+
+            self.__Tray.append(newX)
+
+
+        self.__Tray[coordX][coordY] = "/\\"
+        self.__Tray[self.__lenX - 1][self.__lenY - 1] = "->"
+
+        self.bottomBar()
+        for x in range(self.__lenX):
+            newX = []
+            for y in range(self.__lenY):
+                newX.append(self.__Tray[x][y])
+
+            for coord in newX:
+                print("| " + coord, end=" ")
+
+            print("|")
+
+            self.bottomBar()
+
+    def upgradeWorld(self):
+        self.__world += 1
+
+
 class Room:
     """
         Une class Room qui prend 2 argument pour chaque objet
@@ -311,6 +327,24 @@ def verif(coordX, coordY, player):
     else: 
         return True, "OK"
 
+def newWorld(currentTray, player):
+    print("Voulez vous passer au niveau suivant ?") 
+    wantToContinue = input() 
+
+    if wantToContinue == "oui":
+        Tray.upgradeWorld(currentTray)
+
+        fighter = F.Fighter(120, 20)
+        coordX = 0
+        coordY = 0
+
+        print("Il vous est fortement recommendé de sauvegarder votre partie")
+        print("Voulez vous sauvegarder ?")
+        wantToContinue = input() 
+
+        newGame(currentTray, player, fighter, coordX, coordY)
+
+
 def newGame(currentTray, player, fighter, coordX, coordY):
 
     tray = Tray.getTray(currentTray)
@@ -345,7 +379,9 @@ def newGame(currentTray, player, fighter, coordX, coordY):
         print(f"• Argent : {P.Player.getMoney(player)}€\n")
         print(f"• Total : {score} points")
         print("————————————————————————————————————————————————")
-        deleteSave(player)
+        
+        newWorld(currentTray, player, coordX, coordY)
+
     elif reason == "noLP":
         print("Oh non ! vous n'avez plus de vie vous ne pouvez donc pas continuer le jeu.\n")
         deleteSave(player)
@@ -390,7 +426,7 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
     elif choice == "info":
 
         print("————————————————————————————————————————————————")
-        print(f"Pour ce jeu, {nbLines()} lignes de code on été nécessaire.")
+        print(f"Pour ce jeu, {nbLines()} lignes de code ont été nécessaire.")
 
     elif choice == "start":
         newGame(currentTray, player, fighter, coordX, coordY)  
@@ -406,7 +442,7 @@ def initGame():
     if alreadyLogged == "skip":
         player = P.Player(100, 25, 100, "")
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter)
+        currentTray = Tray(player, fighter, 1)
         coordX = Tray.getX(currentTray)
         coordY = Tray.getY(currentTray)
         dashboard(currentTray, player, fighter, coordX, coordY)
@@ -419,7 +455,7 @@ def initGame():
         player, coordX, coordY = log(username)
 
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter)
+        currentTray = Tray(player, fighter, 1)
 
     else:
         print("\nBonjour à toi nouveau joueur !")
@@ -435,7 +471,7 @@ def initGame():
         print("————————————————————————————————————————————————")
         print("A vous de jouer !\n")
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter)
+        currentTray = Tray(player, fighter, 1)
         coordX = Tray.getX(currentTray)
         coordY = Tray.getY(currentTray)
 
