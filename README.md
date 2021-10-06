@@ -14,4 +14,4 @@ Ce jeu est constituer de plusieurs cases qui représentent des jours. Chaque jou
 
 ## Logigramme
 
-![logigramme](logigramme.pdf)
+![logigramme]("https://github.com/xtsen/jeu-de-role-NSI/blob/98c308aac610178c99636fe285ebfe776eb5cf4a/Logigramme.pdf")
