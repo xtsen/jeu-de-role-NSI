@@ -689,3 +689,10 @@ def nbLines():
     return nbLines
 
 initGame()
+
+"""
+Prochaine feature : 
+
+    • Historique des trajets
+    • Docstring
+"""
