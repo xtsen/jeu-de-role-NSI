@@ -59,6 +59,12 @@ class Tray:
             print("—————", end='')
         print('——————')
 
+    def getLenX(self):
+        return self.__lenX
+
+    def getLenY(self):
+        return self.__lenY
+
     #=============================
     # Les events
     #=============================  
@@ -77,7 +83,6 @@ class Tray:
 
 
         self.__Tray[coordX][coordY] = "/\\"
-        self.__Tray[self.__lenX - 1][self.__lenY - 1] = "->"
 
         self.bottomBar()
         for x in range(self.__lenX):
@@ -88,7 +93,11 @@ class Tray:
             for coord in newX:
                 print("| " + coord, end=" ")
 
-            print("|")
+            if x == self.__lenX -1:
+                print("| ->")
+            else:
+                print("|")
+                
 
             self.bottomBar()
 
@@ -227,25 +236,25 @@ def trading(player):
 
 # Début des définitions de fonction
 
-def movePlayer(player, fighter, coordX, coordY):
+def movePlayer(player, fighter, currentTray, coordX, coordY):
 
     # Choix de la direction à prendre (right, left, top, bottom)
     direction = input(f"Que voulez vous faire {P.Player.getName(player)} (acceder au menu taper 'menu') : ")
 
     if direction == "menu":
         showMenu("inGame")
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "top" and coordX != 0:
         coordX -= 1
         
-    elif direction == "bottom" and coordX != 6:
+    elif direction == "bottom" and coordX != Tray.getLenX(currentTray) - 1:
         coordX+= 1
 
     elif direction == "left" and coordY != 0:
         coordY -= 1
 
-    elif direction == "right" and coordY != 6:
+    elif direction == "right" and coordY != Tray.getLenX(currentTray) - 1:
         coordY += 1
 
     elif direction == "save":
@@ -253,41 +262,41 @@ def movePlayer(player, fighter, coordX, coordY):
         print("\n—————————————————————————————————————————————————")
         print("Votre partie a bien été sauvegarder")
         print("—————————————————————————————————————————————————")
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "profil":
         showProfile(player)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     # Cheatcode
     elif direction == "tp":
-        coordX = 6
-        coordY = 5
+        coordX = Tray.getLenX(currentTray)-1
+        coordY = Tray.getLenY(currentTray)-2
 
     # Devcode
     elif direction == "money":
         P.Player.EVT_findMoney(player)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "food":
         P.Player.EVT_findFood(player)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "fight":
         fight(player, fighter)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "trading":
         trading(player)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "devmode":
         PUT_Player(player, 300, 100, 1000)
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     else:
         print("Vous ne pouvez pas prendre cette direction")
-        movePlayer(player, fighter, coordX, coordY)
+        movePlayer(player, fighter, currentTray, coordX, coordY)
 
     # return des nouvelles coordonnées
     return coordX, coordY
@@ -295,7 +304,7 @@ def movePlayer(player, fighter, coordX, coordY):
 def round(currentTray, player, tray, currentX, currentY):
 
     print("\n—————————————————————————————————————————————————")
-    print(f"Vous etes sur la case : {tray[currentX][currentY]}")
+    print(f"Vous etes sur la case : {tray[currentX][currentY+1]}")
 
     # Affichage du plateau
     Tray.showTray(currentTray, currentX, currentY)
@@ -317,24 +326,32 @@ def PUT_Player(player, LP, Strength, Money):
     P.Player.setStrength(player, Strength)
     P.Player.setMoney(player, Money)
 
-def verif(coordX, coordY, player):
-    if coordX == 6 and coordY == 6:
+def verif(currentTray, coordX, coordY, player, fighter):
+    if coordX == Tray.getLenX(currentTray) - 1 and coordY == Tray.getLenY(currentTray) - 1:
+
+        newWorld(currentTray, player, fighter)
+
         return False, "reachEnd"
+        
 
     elif P.Player.getLP(player) <= 0:
         return False, "noLP"
 
-    else: 
+    else:
         return True, "OK"
 
-def newWorld(currentTray, player):
+def newWorld(currentTray, player, fighter):
     print("Voulez vous passer au niveau suivant ?") 
     wantToContinue = input() 
 
     if wantToContinue == "oui":
-        Tray.upgradeWorld(currentTray)
+        lastLP = F.Fighter.getLP(fighter)
+        lastStrength = F.Fighter.getStrength(fighter)
+        fighter = F.Fighter(lastLP + 10, lastStrength + 5)
+        lastWorld = Tray.getWorld(currentTray)
 
-        fighter = F.Fighter(120, 20)
+        newTray = Tray(player, fighter, lastWorld + 1)
+
         coordX = 0
         coordY = 0
 
@@ -342,7 +359,7 @@ def newWorld(currentTray, player):
         print("Voulez vous sauvegarder ?")
         wantToContinue = input() 
 
-        newGame(currentTray, player, fighter, coordX, coordY)
+        newGame(newTray, player, fighter, coordX, coordY)
 
 
 def newGame(currentTray, player, fighter, coordX, coordY):
@@ -350,19 +367,21 @@ def newGame(currentTray, player, fighter, coordX, coordY):
     tray = Tray.getTray(currentTray)
     canContinue = True
 
+    print(f"Bienvenue dans le monde n°{Tray.getWorld(currentTray)}")
+
     print("\n—————————————————————————————————————————————————")
-    print(f"Vous etes sur la case : {tray[coordX][coordY]}")
+    print(f"Vous etes sur la case : {tray[coordX][coordY + 1]}")
 
     Tray.showTray(currentTray, coordX, coordY)
 
     while canContinue != False:
 
         # verif si le joueur à toujours de la vie et si il n'est pas sur la dernière case
-        canContinue, reason = verif(coordX, coordY, player)
+        canContinue, reason = verif(currentTray, coordX, coordY, player, fighter)
 
         if canContinue != False:
         
-            coordX, coordY = movePlayer(player, fighter, coordX, coordY)
+            coordX, coordY = movePlayer(player, fighter, currentTray, coordX, coordY)
 
             player, coordX, coordY = round(currentTray, player, tray, coordX, coordY)
 
@@ -379,8 +398,6 @@ def newGame(currentTray, player, fighter, coordX, coordY):
         print(f"• Argent : {P.Player.getMoney(player)}€\n")
         print(f"• Total : {score} points")
         print("————————————————————————————————————————————————")
-        
-        newWorld(currentTray, player, coordX, coordY)
 
     elif reason == "noLP":
         print("Oh non ! vous n'avez plus de vie vous ne pouvez donc pas continuer le jeu.\n")
