@@ -12,6 +12,19 @@ Ce jeu est constituer de plusieurs cases qui représentent des jours. Chaque jou
 - Vous allez aussi peut être tomber un trésor qui augmentera votre fortune
 - Vous pourrez trouver de la nourriture qui augmentera vos points de vie et de force
 
+## Features
+
+- Possibilité de sauvegarder sa partie
+- Affichage d'un menu
+- Affichage du plateau/de la carte
+- Réglage du niveau de difficulté
+- Affichage du profil
+- Un événement "marchand" qui permet d'acheter des items
+- Un compte en banque
+- Un système de niveaux (Gagne de l'XP grace aux combats)
+- Un système de "mondes" chaque nouveau monde augmente les prix du marchand, renforce le mercenaire et agrandi le plateau
+- Un système de score
+
 ## Logigramme
 
 ![logigramme](https://github.com/xtsen/jeu-de-role-NSI/blob/c7296dcd271bef8a264ab0232141a4458961b8b0/logigramme.png)
