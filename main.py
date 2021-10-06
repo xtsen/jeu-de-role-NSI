@@ -259,7 +259,7 @@ def movePlayer(player, fighter, currentTray, coordX, coordY):
         coordY += 1
 
     elif direction == "save":
-        save(player, coordX, coordY)
+        save(player, coordX, coordY, currentTray)
         print("\n—————————————————————————————————————————————————")
         print("Votre partie a bien été sauvegarder")
         print("—————————————————————————————————————————————————")
@@ -367,18 +367,18 @@ def newWorld(currentTray, player, fighter):
 
 
 def end(currentTray, player):
-    score = (P.Player.getLP(player)*3 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)*(Tray.getWorld(currentTray)-1)
+    score = (P.Player.getLP(player)*3 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)*(Tray.getWorld(currentTray))
     writeScore(score)
     writeUsername(P.Player.getName(player))
     print("≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
     print(f"\nBravo, {P.Player.getName(player)} vous avez reussi à traverser ce monde !\n")
     print("Profil :")
     print("————————————————————————————————————————————————")
-    print(f"• Niveau : {P.Player.getLevel(player)}\n")
+    print(f"• Niveau {P.Player.getLevel(player)}\n")
     print(f"• Vie : {P.Player.getLP(player)}")
     print(f"• Force : {P.Player.getStrength(player)}")
     print(f"• Argent : {P.Player.getMoney(player)}€\n")
-    print(f"• Monde : {Tray.getWorld(currentTray)}€\n")
+    print(f"• Monde : n°{Tray.getWorld(currentTray)}\n")
     print(f"• Total : {score} points")
     print("————————————————————————————————————————————————")
 
@@ -454,6 +454,7 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
 
         print("————————————————————————————————————————————————")
         print(f"Pour ce jeu, {nbLines()} lignes de code ont été nécessaire.")
+        dashboard(currentTray, player, fighter, coordX, coordY)
     
     elif choice == "exit":
         print("Vous ne pouvez effectuer cette commande que pendant le jeu")
@@ -569,14 +570,16 @@ def writeUsername(username):
         for user in users:
             file.write(f"{user}")
 
-def save(player, coordX, coordY):
+def save(player, coordX, coordY, currentTray):
     username = P.Player.getName(player)
+    level = P.Player.getLevel(player)
     LifePoints = P.Player.getLP(player)
     Strength  = P.Player.getStrength(player)
     Money = P.Player.getMoney(player)
     Difficulty = P.Player.getDifficulty(player)
+    World = Tray.getWorld(currentTray)
 
-    infos = [username, LifePoints, Strength, Money, Difficulty, coordX, coordY]
+    infos = [username, level, LifePoints, Strength, Money, Difficulty, coordX, coordY, currentTray]
     with open(f"saves/{username}.txt", "a") as file:
         for info in infos:
             file.write(f"{info}")
