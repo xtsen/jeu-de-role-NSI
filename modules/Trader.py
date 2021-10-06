@@ -22,16 +22,25 @@ class Trader:
     #=============================
     # Les getters
     #=============================  
-    def getItems(self):
+    def getItems(self, world):
+        self.updatePrices(world)
         return self.__item1, self.__item2, self.__item3
 
-    def getPrices(self):
+    def getPrices(self, world):
+        self.updatePrices(world)
         return self.__item1[1], self.__item2[1], self.__item3[1]
 
     #=============================
     # Les events
     #=============================  
-    def showItems(self):
+    def updatePrices(self, world):
+        increase = (world-1)*100
+        self.__item1[1] += increase
+        self.__item2[1] += increase
+        self.__item3[1] += increase
+
+    def showItems(self, world):
+        self.updatePrices(world)
         print("====================")
         print(f"{self.__item1[0]} pour {self.__item1[1]}€")
         print("====================")

@@ -34,7 +34,7 @@ class Tray:
         self.__world = world
         self.__coordX = 0
         self.__coordY = 0
-        self.__Room = Room(player, fighter)
+        self.__Room = Room(player, fighter, self)
 
     #=============================
     # Les getters
@@ -111,9 +111,10 @@ class Room:
         max : 48 objets par partie 
         param : player, fighter
     """
-    def __init__(self, player, fighter):
+    def __init__(self, player, fighter, currentTray):
         self.__player = player
         self.__fighter = fighter
+        self.__Tray = currentTray
 
     #=============================
     # Les getters
@@ -140,7 +141,7 @@ class Room:
             print('\nOh !')
             print('Vous êtes face à un marchand !\n')
             print("————————————————————————————————————————————————\n")
-            trading(self.__player)
+            trading(self.__player, self.__Tray)
         elif self.__nameObject == "money":
             print('\nVous avez de la chance, vous venez de découvrir un sac plein d\'argent.\n')
             print('Vous avez gagné 100€')
@@ -195,7 +196,7 @@ def fight(player, fighter):
 
         
 
-def trading(player):
+def trading(player, currentTray):
     print(f"Vous avez actuellement {P.Player.getMoney(player)}€\n")
 
     # Demande au joueur si il veut acheter un item
@@ -207,8 +208,8 @@ def trading(player):
         trader = T.Trader()
 
         # Affichage du shop du marchand
-        T.Trader.showItems(trader)
-        item1, item2, item3 = T.Trader.getItems(trader)
+        T.Trader.showItems(trader, Tray.getWorld(currentTray))
+        item1, item2, item3 = T.Trader.getItems(trader, Tray.getWorld(currentTray))
         items = [item1, item2, item3]
 
         # list du prix des item
@@ -290,7 +291,7 @@ def movePlayer(player, fighter, currentTray, coordX, coordY):
         movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "trading":
-        trading(player)
+        trading(player, currentTray)
         movePlayer(player, fighter, currentTray, coordX, coordY)
 
     elif direction == "devmode":
@@ -350,7 +351,7 @@ def newWorld(currentTray, player, fighter):
     if wantToContinue == "oui":
         lastLP = F.Fighter.getLP(fighter)
         lastStrength = F.Fighter.getStrength(fighter)
-        fighter = F.Fighter(lastLP + 10, lastStrength + 5)
+        fighter = F.Fighter(lastLP + 50, lastStrength + 20)
         lastWorld = Tray.getWorld(currentTray)
 
         newTray = Tray(player, fighter, lastWorld + 1)
@@ -373,9 +374,11 @@ def end(currentTray, player):
     print(f"\nBravo, {P.Player.getName(player)} vous avez reussi à traverser ce monde !\n")
     print("Profil :")
     print("————————————————————————————————————————————————")
+    print(f"• Niveau : {P.Player.getLevel(player)}\n")
     print(f"• Vie : {P.Player.getLP(player)}")
     print(f"• Force : {P.Player.getStrength(player)}")
     print(f"• Argent : {P.Player.getMoney(player)}€\n")
+    print(f"• Monde : {Tray.getWorld(currentTray)}€\n")
     print(f"• Total : {score} points")
     print("————————————————————————————————————————————————")
 
@@ -404,6 +407,7 @@ def newGame(currentTray, player, fighter, coordX, coordY):
 
     if reason == "reachEnd":
         end(currentTray, player)
+        return 0
 
     elif reason == "noLP":
         print("Oh non ! vous n'avez plus de vie vous ne pouvez donc pas continuer le jeu.\n")
