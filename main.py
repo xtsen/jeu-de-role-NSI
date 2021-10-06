@@ -268,6 +268,9 @@ def movePlayer(player, fighter, currentTray, coordX, coordY):
         showProfile(player)
         movePlayer(player, fighter, currentTray, coordX, coordY)
 
+    elif direction == "exit":
+        end(currentTray, player)
+
     # Cheatcode
     elif direction == "tp":
         coordX = Tray.getLenX(currentTray)-1
@@ -362,6 +365,20 @@ def newWorld(currentTray, player, fighter):
         newGame(newTray, player, fighter, coordX, coordY)
 
 
+def end(currentTray, player):
+    score = (P.Player.getLP(player)*3 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)*(Tray.getWorld(currentTray)-1)
+    writeScore(score)
+    writeUsername(P.Player.getName(player))
+    print("≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
+    print(f"\nBravo, {P.Player.getName(player)} vous avez reussi à traverser ce monde !\n")
+    print("Profil :")
+    print("————————————————————————————————————————————————")
+    print(f"• Vie : {P.Player.getLP(player)}")
+    print(f"• Force : {P.Player.getStrength(player)}")
+    print(f"• Argent : {P.Player.getMoney(player)}€\n")
+    print(f"• Total : {score} points")
+    print("————————————————————————————————————————————————")
+
 def newGame(currentTray, player, fighter, coordX, coordY):
 
     tray = Tray.getTray(currentTray)
@@ -386,18 +403,7 @@ def newGame(currentTray, player, fighter, coordX, coordY):
             player, coordX, coordY = round(currentTray, player, tray, coordX, coordY)
 
     if reason == "reachEnd":
-        score = (P.Player.getLP(player)*5 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)
-        writeScore(score)
-        writeUsername(P.Player.getName(player))
-        print("≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
-        print(f"\nBravo, {P.Player.getName(player)} vous avez reussi à traverser ce monde !\n")
-        print("Profil :")
-        print("————————————————————————————————————————————————")
-        print(f"• Vie : {P.Player.getLP(player)}")
-        print(f"• Force : {P.Player.getStrength(player)}")
-        print(f"• Argent : {P.Player.getMoney(player)}€\n")
-        print(f"• Total : {score} points")
-        print("————————————————————————————————————————————————")
+        end(currentTray, player)
 
     elif reason == "noLP":
         print("Oh non ! vous n'avez plus de vie vous ne pouvez donc pas continuer le jeu.\n")
@@ -444,6 +450,10 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
 
         print("————————————————————————————————————————————————")
         print(f"Pour ce jeu, {nbLines()} lignes de code ont été nécessaire.")
+    
+    elif choice == "exit":
+        print("Vous ne pouvez effectuer cette commande que pendant le jeu")
+        dashboard(currentTray, player, fighter, coordX, coordY)
 
     elif choice == "start":
         newGame(currentTray, player, fighter, coordX, coordY)  
@@ -626,6 +636,8 @@ def showMenu(mode):
         print("Avoir plus d'info, tapez 'info'")
         print("————————————————————————————————————————————————")
 
+    print("Arreter le jeu, tapez 'exit'")
+    print("————————————————————————————————————————————————")
     print("Commencer le jeu, tapez 'start'")
     print("\n≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
 
