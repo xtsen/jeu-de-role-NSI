@@ -211,14 +211,14 @@ def trading(player):
 
 # Début des définitions de fonction
 
-def movePlayer(player, coordX, coordY):
+def movePlayer(player, fighter, coordX, coordY):
 
     # Choix de la direction à prendre (right, left, top, bottom)
     direction = input(f"Que voulez vous faire {P.Player.getName(player)} (acceder au menu taper 'menu') : ")
 
     if direction == "menu":
         showMenu("inGame")
-        movePlayer(player, coordX, coordY)
+        movePlayer(player, fighter, coordX, coordY)
 
     elif direction == "top" and coordX != 0:
         coordX -= 1
@@ -232,37 +232,46 @@ def movePlayer(player, coordX, coordY):
     elif direction == "right" and coordY != 6:
         coordY += 1
 
-    # Cheatcode
-
     elif direction == "save":
         save(player, coordX, coordY)
         print("\n—————————————————————————————————————————————————")
         print("Votre partie a bien été sauvegarder")
         print("—————————————————————————————————————————————————")
+        movePlayer(player, fighter, coordX, coordY)
 
+    elif direction == "profil":
+        showProfile(player)
+        movePlayer(player, fighter, coordX, coordY)
+
+    # Cheatcode
     elif direction == "tp":
         coordX = 6
         coordY = 5
 
+    # Devcode
     elif direction == "money":
         P.Player.EVT_findMoney(player)
-        movePlayer(player, coordX, coordY)
+        movePlayer(player, fighter, coordX, coordY)
 
     elif direction == "food":
         P.Player.EVT_findFood(player)
-        movePlayer(player, coordX, coordY)
+        movePlayer(player, fighter, coordX, coordY)
 
-    elif direction == "profil":
-        showProfile(player)
-        movePlayer(player, coordX, coordY)
+    elif direction == "fight":
+        fight(player, fighter)
+        movePlayer(player, fighter, coordX, coordY)
+
+    elif direction == "trading":
+        trading(player)
+        movePlayer(player, fighter, coordX, coordY)
 
     elif direction == "devmode":
         PUT_Player(player, 300, 100, 1000)
-        movePlayer(player, coordX, coordY)
+        movePlayer(player, fighter, coordX, coordY)
 
     else:
         print("Vous ne pouvez pas prendre cette direction")
-        movePlayer(player, coordX, coordY)
+        movePlayer(player, fighter, coordX, coordY)
 
     # return des nouvelles coordonnées
     return coordX, coordY
@@ -302,7 +311,7 @@ def verif(coordX, coordY, player):
     else: 
         return True, "OK"
 
-def newGame(currentTray, player, coordX, coordY):
+def newGame(currentTray, player, fighter, coordX, coordY):
 
     tray = Tray.getTray(currentTray)
     canContinue = True
@@ -319,7 +328,7 @@ def newGame(currentTray, player, coordX, coordY):
 
         if canContinue != False:
         
-            coordX, coordY = movePlayer(player, coordX, coordY)
+            coordX, coordY = movePlayer(player, fighter, coordX, coordY)
 
             player, coordX, coordY = round(currentTray, player, tray, coordX, coordY)
 
@@ -384,7 +393,7 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
         print(f"Pour ce jeu, {nbLines()} lignes de code on été nécessaire.")
 
     elif choice == "start":
-        newGame(currentTray, player, coordX, coordY)  
+        newGame(currentTray, player, fighter, coordX, coordY)  
 
     else:
         print("Choix non valide veuillez recommencez") 
