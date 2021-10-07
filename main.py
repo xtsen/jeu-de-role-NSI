@@ -776,5 +776,5 @@ initGame()
 """
 Prochaine feature : 
 
-    • Docstring
+    • 
 """
