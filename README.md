@@ -24,6 +24,7 @@ Ce jeu est constituer de plusieurs cases qui représentent des jours. Chaque jou
 - Un système de niveaux (Gagne de l'XP grace aux combats)
 - Un système de "mondes" chaque nouveau monde augmente les prix du marchand, renforce le mercenaire et agrandi le plateau
 - Un système de score
+- Un historique des déplacements
 
 ## Logigramme
 
