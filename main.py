@@ -17,10 +17,17 @@ class Tray:
         max : 1 objet par partie
         param : player, fighter
     """
-    def __init__(self, player, fighter, world):
+    def __init__(self, player, fighter, world, day):
         self.__letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
         self.__lenX = world + 4
         self.__lenY = world + 4
+        self.__history = []
+        self.__day = day
+
+        dayDisplay = str(self.__day//10) + str(self.__day)[-1]
+        day = ["J" + dayDisplay, 0, 0]
+        self.__history.append(day)
+
 
         # Création du plateau
         self.__Tray = []
@@ -55,15 +62,22 @@ class Tray:
         return self.__world
 
     def bottomBar(self):
-        for i in range(self.__lenX - 1):
-            print("—————", end='')
-        print('——————')
+        print("╠═════╬", end='')
+        for i in range(self.__lenX - 2):
+            print("═════╬", end='')
+        print('═════╣')
 
     def getLenX(self):
         return self.__lenX
 
     def getLenY(self):
         return self.__lenY
+
+    def getHistory(self):
+        return self.__history
+
+    def getDay(self):
+        return self.__day
 
     #=============================
     # Les events
@@ -77,32 +91,52 @@ class Tray:
         for x in range(self.__lenX):
             newX = []
             for y in range(1, self.__lenY + 1):
-                newX.append(self.__letters[x] + str(y))
+                # self.__letters[x] + str(y)
+                newX.append("   ")
 
             self.__Tray.append(newX)
 
+        for day in self.__history:
+            self.__Tray[day[1]][day[2]] = day[0]
 
-        self.__Tray[coordX][coordY] = "/\\"
 
-        self.bottomBar()
+        self.__Tray[coordX][coordY] = "-O-"
+
+        print("╔═════╦", end='')
+        for i in range(self.__lenX - 2):
+            print("═════╦", end='')
+        print('═════╗')
         for x in range(self.__lenX):
             newX = []
             for y in range(self.__lenY):
                 newX.append(self.__Tray[x][y])
 
             for coord in newX:
-                print("| " + coord, end=" ")
+                print("║ " + coord, end=" ")
 
             if x == self.__lenX -1:
-                print("| ->")
+                print(" ->")
+                print("╚═════╩", end='')
+                for i in range(self.__lenX - 2):
+                    print("═════╩", end='')
+                print('═════╝')
             else:
-                print("|")
-                
+                print("║")
+                self.bottomBar()
 
-            self.bottomBar()
 
     def upgradeWorld(self):
         self.__world += 1
+
+    def newDay(self):
+        self.__day += 1
+
+    def addDay(self, coordX, coordY):
+        dayDisplay = str(self.__day//10) + str(self.__day)[-1]
+        day = ["J" + dayDisplay, coordX, coordY]
+        self.__history.append(day)
+
+    
 
 
 class Room:
@@ -312,6 +346,8 @@ def round(currentTray, player, tray, currentX, currentY):
 
     # Affichage du plateau
     Tray.showTray(currentTray, currentX, currentY)
+    Tray.newDay(currentTray)
+    Tray.addDay(currentTray, currentX, currentY)
 
     # Création d'un objet Room()
     Tray.launchRoom(currentTray)
@@ -354,7 +390,9 @@ def newWorld(currentTray, player, fighter):
         fighter = F.Fighter(lastLP + 50, lastStrength + 20)
         lastWorld = Tray.getWorld(currentTray)
 
-        newTray = Tray(player, fighter, lastWorld + 1)
+        day = Tray.getDay(currentTray)
+
+        newTray = Tray(player, fighter, lastWorld + 1, day)
 
         coordX = 0
         coordY = 0
@@ -407,7 +445,6 @@ def newGame(currentTray, player, fighter, coordX, coordY):
 
     if reason == "reachEnd":
         end(currentTray, player)
-        return 0
 
     elif reason == "noLP":
         print("Oh non ! vous n'avez plus de vie vous ne pouvez donc pas continuer le jeu.\n")
@@ -474,7 +511,7 @@ def initGame():
     if alreadyLogged == "skip":
         player = P.Player(100, 25, 100, "")
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter, 1)
+        currentTray = Tray(player, fighter, 1, 0)
         coordX = Tray.getX(currentTray)
         coordY = Tray.getY(currentTray)
         dashboard(currentTray, player, fighter, coordX, coordY)
