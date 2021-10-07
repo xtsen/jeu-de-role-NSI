@@ -16,9 +16,11 @@ class Fighter:
     # Les getters
     #=============================  
     def getStrength(self):
+        """Renvoie la force du mercennaire"""
         return self.__strength
 
     def getLP(self):
+        """Renvoie les points de vie du mercennaire"""
         return self.__LP
 
     #=============================
@@ -27,6 +29,7 @@ class Fighter:
 
     # une fonction pour différents niveaux de mercenaires
     def setFighter(self):
+        """Permet de régler la force et les points du mercennaire selon le niveau de difficulté"""
         if self.__level == 2:
             self.__LP += 20
             self.__strength += 10

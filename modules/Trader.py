@@ -23,10 +23,12 @@ class Trader:
     # Les getters
     #=============================  
     def getItems(self, world):
+        """Renvoie les items généré aléatoirement"""
         self.updatePrices(world)
         return self.__item1, self.__item2, self.__item3
 
     def getPrices(self, world):
+        """Renvoie les prix de tous les items généré"""
         self.updatePrices(world)
         return self.__item1[1], self.__item2[1], self.__item3[1]
 
@@ -34,12 +36,14 @@ class Trader:
     # Les events
     #=============================  
     def updatePrices(self, world):
+        """Augmente le prix des items selon le numero de monde"""
         increase = (world-1)*100
         self.__item1[1] += increase
         self.__item2[1] += increase
         self.__item3[1] += increase
 
     def showItems(self, world):
+        """Affiche le shop du marchand"""
         self.updatePrices(world)
         print("====================")
         print(f"{self.__item1[0]} pour {self.__item1[1]}€")

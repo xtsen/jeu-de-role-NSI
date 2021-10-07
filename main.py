@@ -24,6 +24,7 @@ class Tray:
         self.__history = []
         self.__day = day
 
+        # formater la date
         dayDisplay = str(self.__day//10) + str(self.__day)[-1]
         day = ["J" + dayDisplay, 0, 0]
         self.__history.append(day)
@@ -47,46 +48,57 @@ class Tray:
     # Les getters
     #=============================  
     def getTray(self):
+        """Renvoie le list Tray"""
         return self.__Tray
 
     def getRoom(self):
+        """Renvoie l'objet Room"""
         return self.__Room
 
     def getX(self):
+        """Renvoie l'ordonnée des coordonées"""
         return self.__coordX
 
     def getY(self):
+        """Renvoie l'abcisse des coordonées"""
         return self.__coordY
 
     def getWorld(self):
+        """Renvoie le numero du monde"""
         return self.__world
 
     def bottomBar(self):
+        """Créer l'affichage d'une barre"""
         print("╠═════╬", end='')
         for i in range(self.__lenX - 2):
             print("═════╬", end='')
         print('═════╣')
 
     def getLenX(self):
+        """Renvoie la hauteur du plateau"""
         return self.__lenX
 
     def getLenY(self):
+        """Renvoie la largeur du plateau"""
         return self.__lenY
 
     def getHistory(self):
+        """Renvoie l'historique des déplacements"""
         return self.__history
 
     def getDay(self):
+        """Renvoie le jour actuel"""
         return self.__day
 
     #=============================
     # Les events
     #=============================  
     def launchRoom(self):
+        """Création d'un événement dans l'objet Room"""
         Room.launchEvent(self.__Room)
 
     def showTray(self, coordX, coordY):
-
+        """Renvoie l'affichage du plateau"""
         self.__Tray = []
         for x in range(self.__lenX):
             newX = []
@@ -126,12 +138,15 @@ class Tray:
 
 
     def upgradeWorld(self):
+        """Permet d'augmenter le numero du monde"""
         self.__world += 1
 
     def newDay(self):
+        """Permet d'augmenter le jour"""
         self.__day += 1
 
     def addDay(self, coordX, coordY):
+        """Permet d'afficher correctement les jours"""
         dayDisplay = str(self.__day//10) + str(self.__day)[-1]
         day = ["J" + dayDisplay, coordX, coordY]
         self.__history.append(day)
@@ -154,12 +169,16 @@ class Room:
     # Les getters
     #=============================  
     def getEvent(self):
+        """Renvoie l'événement de l'objet"""
         return self.__nameObject
 
     #=============================
     # Les events
     #=============================  
     def launchEvent(self):
+
+        """Permet de créer aléatoirement un événement"""
+
         event = ["nothing", "fight", "food", "money", "trader"]
         self.__nameObject = event[randint(0, 4)]
         if self.__nameObject == "fight":
@@ -188,6 +207,8 @@ class Room:
 # fonction des events
 
 def fight(player, fighter):
+
+    """Permet de faire combattre ou non un mercennaire et le joueur"""
 
     # Décision d'attaque ou non
     fightOrNot = randint(0, 1)
@@ -231,6 +252,9 @@ def fight(player, fighter):
         
 
 def trading(player, currentTray):
+
+    """Permet de marchander avec le marchand"""
+
     print(f"Vous avez actuellement {P.Player.getMoney(player)}€\n")
 
     # Demande au joueur si il veut acheter un item
@@ -272,6 +296,8 @@ def trading(player, currentTray):
 # Début des définitions de fonction
 
 def movePlayer(player, fighter, currentTray, coordX, coordY):
+
+    """Déplace le joueur sur le plateau"""
 
     # Choix de la direction à prendre (right, left, top, bottom)
     direction = input(f"Que voulez vous faire {P.Player.getName(player)} (acceder au menu taper 'menu') : ")
@@ -341,6 +367,8 @@ def movePlayer(player, fighter, currentTray, coordX, coordY):
 
 def round(currentTray, player, tray, currentX, currentY):
 
+    """"Règle l'affiche et met a jour les attributs de l'objet Tray et Player"""
+
     print("\n—————————————————————————————————————————————————")
     print(f"Vous etes sur la case : {tray[currentX][currentY+1]}")
 
@@ -361,12 +389,15 @@ def round(currentTray, player, tray, currentX, currentY):
 
 def PUT_Player(player, LP, Strength, Money):
 
+    """Permet de mettre a jour les attribut de l'objet Player"""
+
     # une fonction pour update l'objet player
     P.Player.setLP(player, LP)
     P.Player.setStrength(player, Strength)
     P.Player.setMoney(player, Money)
 
 def verif(currentTray, coordX, coordY, player, fighter):
+    """Verifie si le joueur est toujours en vie et si il n'est pas sur la dernière case"""
     if coordX == Tray.getLenX(currentTray) - 1 and coordY == Tray.getLenY(currentTray) - 1:
 
         newWorld(currentTray, player, fighter)
@@ -381,6 +412,7 @@ def verif(currentTray, coordX, coordY, player, fighter):
         return True, "OK"
 
 def newWorld(currentTray, player, fighter):
+    """Gère la transition entre les mondes"""
     print("Voulez vous passer au niveau suivant ?") 
     wantToContinue = input() 
 
@@ -405,6 +437,8 @@ def newWorld(currentTray, player, fighter):
 
 
 def end(currentTray, player):
+
+    """Affiche le résumé et notre score"""
     score = (P.Player.getLP(player)*3 + P.Player.getStrength(player)*2 + P.Player.getMoney(player)*2)*P.Player.getDifficulty(player)*P.Player.getLevel(player)*(Tray.getWorld(currentTray))
     writeScore(score)
     writeUsername(P.Player.getName(player))
@@ -421,6 +455,8 @@ def end(currentTray, player):
     print("————————————————————————————————————————————————")
 
 def newGame(currentTray, player, fighter, coordX, coordY):
+
+    """Permet de gérer une partie"""
 
     tray = Tray.getTray(currentTray)
     canContinue = True
@@ -451,6 +487,8 @@ def newGame(currentTray, player, fighter, coordX, coordY):
         deleteSave(player)
 
 def dashboard(currentTray, player, fighter, coordX, coordY):
+
+    """Agis comme un menu, permet de se balader et eventuellement faire des réglages"""
 
     # Affichage d'un menu
     showMenu("beggining")
@@ -505,6 +543,8 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
         dashboard(currentTray, player, fighter, coordX, coordY)
 
 def initGame():
+
+    """Permet d'initialiser une nouvelle partie"""
 
     alreadyLogged = input("Avez vous une partie sauvegardé : ")
 
@@ -608,6 +648,8 @@ def writeUsername(username):
             file.write(f"{user}")
 
 def save(player, coordX, coordY, currentTray):
+
+    """Sauvegarde les infos du joueur sur un doc texte"""
     username = P.Player.getName(player)
     level = P.Player.getLevel(player)
     LifePoints = P.Player.getLP(player)
@@ -616,7 +658,7 @@ def save(player, coordX, coordY, currentTray):
     Difficulty = P.Player.getDifficulty(player)
     World = Tray.getWorld(currentTray)
 
-    infos = [username, level, LifePoints, Strength, Money, Difficulty, coordX, coordY, currentTray]
+    infos = [username, level, LifePoints, Strength, Money, Difficulty, coordX, coordY, World]
     with open(f"saves/{username}.txt", "a") as file:
         for info in infos:
             file.write(f"{info}")
@@ -625,13 +667,14 @@ def save(player, coordX, coordY, currentTray):
     P.Player.saved(player)
 
 def deleteSave(player):
-
+    """Permet de supprimer la sauvegarde de la partie du joueur"""
     # delete backup if exist one
     username = P.Player.getName(player)
     if P.Player.getSaves(player):
         os.remove(f"saves/{username}.txt")
 
 def log(username):
+    """Permet de récupérer les infos du joueur a partir d'un doc"""
     with open(f'saves/{username}.txt', "r") as file:
         lines = file.readlines()
 
@@ -647,6 +690,7 @@ def log(username):
     return player, int(infos[5]), int(infos[6])
 
 def showProfile(player):
+    """Affiche le profil sans le score"""
     print(f"\nProfil de {P.Player.getName(player)} :")
     print("————————————————————————————————————————————————")
     print(f"• Vie : {P.Player.getLP(player)}")
@@ -655,6 +699,7 @@ def showProfile(player):
     print("————————————————————————————————————————————————")
 
 def showMenu(mode):
+    """Affiche le menu (les commandes possibles)"""
     print("≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠\n")
 
     if mode == "inGame":
@@ -686,7 +731,7 @@ def showMenu(mode):
     print("\n≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
 
 def deleteData():
-
+    """Permet de supprimer toutes les données sauvegarder du jeu"""
     sure = input("Êtes vous sûr de cette manoeuvre : ")
 
     if sure == "oui":
@@ -698,6 +743,7 @@ def deleteData():
             scores.write("")
 
 def nbLines():
+    """Compte le nombre de lignes de code"""
     nbLines = 0
     with open('main.py') as main:
         lines = main.readlines()
@@ -730,6 +776,5 @@ initGame()
 """
 Prochaine feature : 
 
-    • Historique des trajets
     • Docstring
 """
