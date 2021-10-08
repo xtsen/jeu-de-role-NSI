@@ -151,9 +151,6 @@ class Tray:
         day = ["J" + dayDisplay, coordX, coordY]
         self.__history.append(day)
 
-    
-
-
 class Room:
     """
         Une class Room qui prend 2 argument pour chaque objet
@@ -248,8 +245,6 @@ def fight(player, fighter):
             print("Vous avez gagné le combat.")
             print(f"Vous avez maintenant {P.Player.getLP(player)} points de vie")
             print("—————————————————————————————————————————————————\n")
-
-        
 
 def trading(player, currentTray):
 
