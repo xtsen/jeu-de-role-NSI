@@ -19,8 +19,8 @@ class Tray:
     """
     def __init__(self, player, fighter, world, day):
         self.__letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-        self.__lenX = world + 4
-        self.__lenY = world + 4
+        self.__lenX = world + 6
+        self.__lenY = world + 6
         self.__history = []
         self.__day = day
 
