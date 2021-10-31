@@ -671,7 +671,7 @@ def log(username):
         for info in lines:
             infos.append(info)
 
-    player = P.Player(int(infos[1]), int(infos[2]), int(infos[3]), infos[0])
+    player = P.Player(int(infos[2]), int(infos[3]), int(infos[4]), infos[0], int(infos[1]))
 
     P.Player.setDifficulty(player, int(infos[4]))
 

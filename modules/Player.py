@@ -6,14 +6,16 @@ class Player:
         param : LP: int, Strength: int, Money: int, name: str
     """
 
-    def __init__(self, LP, Strength, Money, name):
+    def __init__(self, LP, Strength, Money, name, level):
         self.__Name = name
         self.__LP = LP
         self.__Strength = Strength
         self.__Money = Money
-        self.__Difficulty = 1
         self.__Saved = False
-        self.__Level = 100
+        if not level:
+            self.__Level = 100
+        else:
+            self.__Level = level
 
     #=============================
     # Les getters
