@@ -324,9 +324,6 @@ def movePlayer(player, fighter, currentTray, coordX, coordY):
         showProfile(player)
         movePlayer(player, fighter, currentTray, coordX, coordY)
 
-    elif direction == "exit":
-        end(currentTray, player)
-
     # Cheatcode
     elif direction == "tp":
         coordX = Tray.getLenX(currentTray)-1
@@ -525,10 +522,6 @@ def dashboard(currentTray, player, fighter, coordX, coordY):
         print("————————————————————————————————————————————————")
         print(f"Pour ce jeu, {nbLines()} lignes de code ont été nécessaire.")
         dashboard(currentTray, player, fighter, coordX, coordY)
-    
-    elif choice == "exit":
-        print("Vous ne pouvez effectuer cette commande que pendant le jeu")
-        dashboard(currentTray, player, fighter, coordX, coordY)
 
     elif choice == "start":
         newGame(currentTray, player, fighter, coordX, coordY)  
@@ -559,7 +552,7 @@ def initGame():
         player, coordX, coordY = log(username)
 
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter, 1)
+        currentTray = Tray(player, fighter, 1, 0)
 
     else:
         print("\nBonjour à toi nouveau joueur !")
@@ -575,7 +568,7 @@ def initGame():
         print("————————————————————————————————————————————————")
         print("A vous de jouer !\n")
         fighter = F.Fighter(100, 20)
-        currentTray = Tray(player, fighter, 1)
+        currentTray = Tray(player, fighter, 1, 0)
         coordX = Tray.getX(currentTray)
         coordY = Tray.getY(currentTray)
 
@@ -706,6 +699,8 @@ def showMenu(mode):
         print("————————————————————————————————————————————————")
         print("Se deplacer vers le haut, tapez 'top'")
         print("————————————————————————————————————————————————")
+        print("Sauvegarder sa partie, tapez 'save'")
+        print("————————————————————————————————————————————————")
 
     print("Voir la carte, tapez 'carte'")
     print("————————————————————————————————————————————————")
@@ -720,7 +715,7 @@ def showMenu(mode):
         print("Avoir plus d'info, tapez 'info'")
         print("————————————————————————————————————————————————")
 
-    print("Arreter le jeu, tapez 'exit'")
+    print("Arreter le jeu, maintenez 'ctrl' + 'C'")
     print("————————————————————————————————————————————————")
     print("Commencer le jeu, tapez 'start'")
     print("\n≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠≠")
@@ -765,6 +760,8 @@ def nbLines():
             nbLines += 1
 
     return nbLines
+
+
 
 initGame()
 
